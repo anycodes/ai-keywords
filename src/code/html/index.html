@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基于 Serverless 关键词提取应用</title>
+    <link href="https://www.bootcss.com/p/layoutit/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script>
+        var uri = '/keywords'
+        var appName = 'ai-keywords'
+
+        function getSentence() {
+            document.getElementById("result").innerText = "生成中 ..."
+            const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.open("POST", uri, false);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("result").innerText = JSON.stringify(JSON.parse(xmlhttp.responseText))
+                }
+            }
+            xmlhttp.setRequestHeader("Content-type", "application/json");
+            xmlhttp.send(JSON.stringify({
+                "text": document.getElementById('content').value,
+                "type": document.getElementById('wtype').value,
+                "count": document.getElementById('count').value
+            }));
+        }
+
+    </script>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 10px">
+    <div class="row-fluid">
+        <div class="span12">
+            <center>
+                <h3>
+                    基于 Serverless 关键词提取应用
+                </h3>
+            </center>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <fieldset>
+                <legend>说明：</legend>
+                本应用基于 Serverless Devs 进行部署，可通过 <a id="appUrl">Serverless 应用中心一键体验</a>。
+                <br><h5>接口文档：</h5>
+                <p>地址：</p>
+                <pre id="url"></pre>
+                <p>参数：</p>
+                <pre id="args"></pre>
+                <p>案例：</p>
+                <pre id="example"></pre>
+            </fieldset>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <fieldset>
+                <legend id="action">体验：</legend>
+                请输入要提取关键词的文档：<br>
+                <textarea style="width: 100%" id="content">函数计算（Function Compute）是一个事件驱动的全托管 Serverless 计算服务，您无需管理服务器等基础设施，只需编写代码并上传，函数计算会为您准备好计算资源，并以弹性、可靠的方式运行您的代码。</textarea><br>
+                关键词算法：<input type="text" value="tfidf" id="wtype">(取值范围：tfidf, textrank)<br>
+                关键词个数：<input type="text" value="5" id="count"><br>
+                <button class="btn" onclick="getSentence()">关键词提取预测</button>
+            </fieldset>
+            <p id="result"></p>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("appUrl").href = "https://fcnext.console.aliyun.com/applications/create?template=" + appName
+    document.getElementById("url").innerText = window.location.protocol + '//' + window.location.host + uri
+    document.getElementById("args").innerText = `  Headers:
+     Content-type: application/json
+  Body:
+     text: 要提取关键词的文本
+     count: 关键词个数
+     type: 提取算法类型，取值tfidf, textrank`
+    document.getElementById("example").innerText = `import requests
+import base64
+def getResult(content, count, wtype):
+    data = json.dumps({"text": content, "count": count, "type": wtype})
+    txt = requests.post("${window.location.protocol + '//' + window.location.host + uri}", data=data,
+                        headers={'Content-Type': 'application/json'})
+    return txt.content.decode("utf-8")
+print(getResult("文本", 5, "tfidf"))`
+</script>
+</body>
+</html>
