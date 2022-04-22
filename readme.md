@@ -16,8 +16,8 @@
 
 
 
-<img src="https://serverless-article-picture.oss-cn-hangzhou.aliyuncs.com/1650615211886_20220422081332454043.png" style="width=150px">
-> ***基于 TF-IDF 与 Testrank 的中文关键词提取应用***
+<img src="https://serverless-article-picture.oss-cn-hangzhou.aliyuncs.com/1650615211886_20220422081332454043.png" style="width: 150px">
+***基于 TF-IDF 与 Testrank 的中文关键词提取应用***
 
 ## 前期准备
 使用该项目，推荐您拥有以下的产品权限 / 策略：
